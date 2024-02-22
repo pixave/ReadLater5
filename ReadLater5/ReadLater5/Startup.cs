@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Services;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,7 @@ namespace ReadLater5
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ReadLaterDataContext>();
 
-
+                        
             // fully implement identity 
             services.Configure<IdentityOptions>(options =>
             {
@@ -92,6 +94,8 @@ namespace ReadLater5
             app.UseStaticFiles();
 
             app.UseRouting();
+
+
 
             app.UseAuthentication();
             app.UseAuthorization();

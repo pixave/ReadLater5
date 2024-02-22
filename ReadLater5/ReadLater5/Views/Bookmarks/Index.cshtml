@@ -1,0 +1,150 @@
+﻿@model IEnumerable<Entity.Bookmark>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <button type="button" class="btn btn-primary" id="btnCreateNewBM">
+        Create New
+    </button>
+</p>
+<table class="table" id="tblBookmarks">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.URL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShortDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (var item in Model) {
+        <tr>
+        <td>
+        @Html.DisplayFor(modelItem => item.UserID)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.URL)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.ShortDescription)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.Category.ID)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+        </td>
+        </tr>
+        }*@
+    </tbody>
+</table>
+
+<!-- Modals -->
+<div class="modal fade" id="bookMarkModal" tabindex="-1" role="dialog" aria-labelledby="bookMarkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookMarkModalLabel">Create</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="BookMarkURL" class="control-label col-md-6">URL</label>
+                        <div class="col-md-10">
+                            <input type="text" id="BookMarkURL" class="form-control" />
+                            <div class="errorfeedback alert-danger" style="display:none;">Please enter a url</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="BookMarkShortDesc" class="control-label col-md-6">Short Description</label>
+                        <div class="col-md-10">
+                            <input type="text" id="BookMarkShortDesc" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="BookMarkCategory" class="control-label col-md-6">Category</label>
+                        <div class="col-md-10">
+                            <select class="form-control" id="ddlBMCategory">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="fgNewCat" style="display:none;" >
+                        <label for="BookMarkShortDesc" class="control-label col-md-6">New Category Name:</label>
+                        <div class="col-md-10">
+                            <input type="text" id="NewCategoryName" class="form-control" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseCreateCat">Close</button>
+                <button type="button" class="btn btn-primary btnSaveBookMark" id="btnSaveBookMark">Save changes</button>
+                <input type="hidden" id="hdnBMModalSwitch" value="" class="bmswitch" />
+                <input type="hidden" id="hdnBMID" value="" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notLoggedInModalBM" tabindex="-1" role="dialog" aria-labelledby="notLoggedInModalLabelBM" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notLoggedInModalLabelBM">Not Logged In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <span>Please login to view your bookmarks</span>
+                        <div class="col-md-10">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let _UserID = '@ViewBag.UserID';
+</script>

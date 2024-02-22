@@ -52,11 +52,19 @@ namespace Data.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Categories_AspNetUsers_UserId",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +179,7 @@ namespace Data.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     URL = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
@@ -185,6 +194,12 @@ namespace Data.Migrations
                         principalTable: "Categories",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                       name: "FK_Bookmark_AspNetUsers_UserId",
+                       column: x => x.UserID,
+                       principalTable: "AspNetUsers",
+                       principalColumn: "Id",
+                       onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -230,6 +245,14 @@ namespace Data.Migrations
                 name: "IX_Bookmark_CategoryId",
                 table: "Bookmark",
                 column: "CategoryId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookmark_UserId",
+                table: "Bookmark",
+                column: "UserId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Category_UserId",
+                table: "Categories",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -251,15 +274,16 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bookmark");
+            
+            migrationBuilder.DropTable(
+              name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
+          
         }
     }
 }

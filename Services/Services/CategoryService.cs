@@ -34,6 +34,11 @@ namespace Services
             return _ReadLaterDataContext.Categories.ToList();
         }
 
+        public List<Category> GetCategories(string UserID)
+        {
+            return _ReadLaterDataContext.Categories.Where(c => c.UserID == UserID).ToList();
+        }
+
         public Category GetCategory(int Id)
         {
             return _ReadLaterDataContext.Categories.Where(c => c.ID == Id).FirstOrDefault();

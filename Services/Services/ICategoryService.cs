@@ -11,6 +11,7 @@ namespace Services
     {
         Category CreateCategory(Category category);
         List<Category> GetCategories();
+        List<Category> GetCategories(string UserID);
         Category GetCategory(int Id);
         Category GetCategory(string Name);
         void UpdateCategory(Category category);

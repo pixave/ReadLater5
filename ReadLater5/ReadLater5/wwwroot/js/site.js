@@ -307,7 +307,7 @@ function RefreshBookmarks() {
             let html = "<tr><th>URL</th><th>Short Description</th><th>Category</th><th>Date Created</th></tr>";
             data.forEach(function (item, index, arr) {
                 html += "<tr>";
-                html += '<td class="bookmark_url">' + item.url + '</td>';
+                html += '<td class="bookmark_url"><a target="_blank" class="bookmarklink" href="' + item.url + '">' + item.url + '</a></td>';
                 html += '<td class="bookmark_shortdescription">' + item.shortDescription + '</td>';
                 html += '<td class="bookmark_category">' + item.category.name + '</td>';
                 html += '<td class="bookmark_datecreated">' + item.createDate.toString() + '</td>';

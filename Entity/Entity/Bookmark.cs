@@ -25,5 +25,8 @@ namespace Entity
         public virtual Category Category { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        [StringLength(maximumLength: 64)]
+        public string ShortURLToken { get; set; }
     }
 }

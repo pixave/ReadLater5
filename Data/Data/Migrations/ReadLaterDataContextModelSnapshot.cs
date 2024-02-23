@@ -26,6 +26,9 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("UserID")
+                       .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 

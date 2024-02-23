@@ -4,8 +4,17 @@
 // Write your JavaScript code.
 $(document).ready(function () {
 
-    RefreshBookmarks();
-    RefreshCategories();
+    if ($("#tblCategories").length > 0) {
+        RefreshCategories();
+    }
+
+    if ($("#tblBookmarks").length > 0) {
+        RefreshBookmarks();
+    }
+
+    if ($("#divDashboard").length > 0) {
+        RefreshDashboard();
+    }
 
 
     $(".btnSaveCategory").bind("click", function (e) {
@@ -65,7 +74,12 @@ $(document).ready(function () {
         } else {
             $("#BookMarkURL").closest(".form-group").find(".errorfeedback").slideUp();
         }
-
+        if ($("#ddlBMCategory").val() == "" && bmswitch != "D") {
+            isValid = false;
+            $("#ddlBMCategory").closest(".form-group").find(".errorfeedback").slideDown();
+        } else {
+            $("#ddlBMCategory").closest(".form-group").find(".errorfeedback").slideUp();
+        }
         if (isValid) {
             
             let catid = $("#ddlBMCategory").val();
@@ -154,6 +168,8 @@ $(document).ready(function () {
 
 
 });
+
+
 
 function RefreshCategories() {
     let _uid = "";
@@ -249,12 +265,13 @@ function BuildCategoryDDL(_uid) {
     $.get("/api/Category?UserID=" + _uid, function (data, status) {
         $("#ddlBMCategory").html("");//clear the list
         let html = "";
+        html += '<option data-id="" value="">Please select...</option>';
         data.forEach(function (item, index, arr) {
             html += '<option data-id="' + item.id + '" value="' + item.id + '"">' + item.name + '</option>';
         });
         html += '<option data-id="xxx" value="xxx">Add new...</option>';
         $("#ddlBMCategory").html(html);//redraw the control
-        $("#ddlBMCategory").unbind("click");
+        $("#ddlBMCategory").unbind("change");
         $("#ddlBMCategory").bind("change", function (e) {
             switch ($(this).val()) {
                 case "xxx":
@@ -307,7 +324,7 @@ function RefreshBookmarks() {
             let html = "<tr><th>URL</th><th>Short Description</th><th>Category</th><th>Date Created</th></tr>";
             data.forEach(function (item, index, arr) {
                 html += "<tr>";
-                html += '<td class="bookmark_url"><a target="_blank" class="bookmarklink" href="' + item.url + '">' + item.url + '</a></td>';
+                html += '<td class="bookmark_url"><a target="_blank" data-id="' + item.id + '" class="bookmarklink" href="' + item.url + '">' + item.url + '</a></td>';
                 html += '<td class="bookmark_shortdescription">' + item.shortDescription + '</td>';
                 html += '<td class="bookmark_category">' + item.category.name + '</td>';
                 html += '<td class="bookmark_datecreated">' + item.createDate.toString() + '</td>';
@@ -326,6 +343,21 @@ function RefreshBookmarks() {
                 $("#bookMarkDeleteModal").find("button[data-dismiss='modal'").first().click();
             }
 
+            $(".bookmarklink").bind("click", function (e) {
+                // log the click to the table
+                let _BookmarkID = $(this).attr("data-id");
+                jQuery.ajax({
+                    url: "/api/BookmarkClicks",
+                    type: "POST",
+                    data: JSON.stringify({ BookmarkID: _BookmarkID }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function () {
+                    }
+                });
+
+                
+            });
             $(".EditBookMark").bind("click", function (e) {
                 let id = $(this).attr("data-id");
                 // get the latest record
@@ -432,3 +464,54 @@ function RefreshBookmarks() {
 
 
 }
+
+function RefreshDashboard() {
+    let _uid = "";
+    if (_UserID != undefined) {
+        _uid = _UserID;
+    } else {
+
+    }
+    if (_uid != "" && _uid != undefined) {
+        $.get("/api/Dashboards?UserID=" + _uid, function (data, status) {
+
+            $("#divDashboard").html("");//clear the table
+            // draw the table
+            let html = "";
+            let i = 0;
+            data.forEach(function (item, index, arr) {
+                i += 1;
+                html += '<div class="card">';
+                html += '   <div class="card-header" id="heading' + i.toString() + '">';
+                html += '       <h5 class="mb-0">';
+                html += '           <button class="btn btn-link"  data-toggle="collapse" data-target="#collapse' + i.toString() + '" aria-expanded="true" aria-controls="collapse' + i.toString() + '">';
+                html += '               <div class="dash_user_id">' + item.username + '&nbsp;Bookmarks:' + item.numbookmarks + '&nbsp;Clicks:' + item.numclicks + '</div>';
+                html += '           </button>';
+                html += '       </h5>';
+                html += '   </div>';
+                html += '   <div id="collapse' + i.toString() + '" class="collapse" aria-labelledby="heading' + i.toString() + '" data-parent="#divDashboard">';
+                html += '       <div class="card-body">';
+                
+                item.bookmarks.forEach(function (bmitem, bmindex, bmarr) {
+                    html +=  bmitem.url + '&nbsp;Clicks:' + bmitem.numclicks + '<br/>';
+                });
+
+                html += '       </div>';
+                html += '   </div>';
+                html += '</div>';
+            });
+           
+            $("#divDashboard").html(html);
+          
+
+
+            
+        });
+    } else {
+        $('#notLoggedInModal').modal('show');
+    }
+
+
+}
+
+

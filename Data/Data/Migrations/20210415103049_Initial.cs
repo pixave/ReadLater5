@@ -173,6 +173,9 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+           
+
+
             migrationBuilder.CreateTable(
                 name: "Bookmark",
                 columns: table => new
@@ -183,7 +186,8 @@ namespace Data.Migrations
                     URL = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ShortURLToken = table.Column<string>(type: "nvarchar(64)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -202,6 +206,24 @@ namespace Data.Migrations
                        onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+              name: "BookmarkClick",
+              columns: table => new
+              {
+                  ID = table.Column<int>(type: "int", nullable: false).Annotation("SqlServer:Identity", "1, 1"),
+                  BookmarkID = table.Column<int>(type: "int", nullable: false),
+                  ClickDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+              },
+              constraints: table =>
+              {
+                  table.PrimaryKey("PK_BookmarkClick", x => x.ID);
+                  table.ForeignKey(
+                      name: "FK_BookmarkClick_CategoryId",
+                      column: x => x.BookmarkID,
+                      principalTable: "Bookmark",
+                      principalColumn: "ID",
+                      onDelete: ReferentialAction.Cascade);
+              });
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
